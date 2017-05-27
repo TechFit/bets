@@ -37,6 +37,7 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Главная', 'url' => ['/site/index']],
+            ['label' => 'Прогнозы', 'url' => ['/bets/index']],
             Yii::$app->user->isGuest ? (
             ['label' => 'Регистрация', 'url' => ['/site/sign']]
             ) : (''),

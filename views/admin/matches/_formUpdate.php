@@ -13,16 +13,11 @@ use kartik\datetime\DateTimePicker;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'home_team_id')->dropDownList($teams); ?>
+    <?= $form->field($model, 'home_team_result')->textInput() ?>
 
-    <?= $form->field($model, 'guest_team_id')->dropDownList($teams); ?>
+    <?= $form->field($model, 'guest_team_result')->textInput() ?>
 
-    <?= $form->field($model, 'start_time')->widget(DateTimePicker::className(), [
-        'pluginOptions' => [
-                'format' => 'yyyy-mm-dd hh:ii:00',
-                'autoclose' => true,
-        ]
-    ]); ?>
+    <?= $form->field($model, 'won_team_id')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -31,4 +26,3 @@ use kartik\datetime\DateTimePicker;
     <?php ActiveForm::end(); ?>
 
 </div>
-

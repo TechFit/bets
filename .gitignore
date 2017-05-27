@@ -30,11 +30,6 @@ tests/_output/*
 tests/_support/_generated
 
 /yii
-/web/.htaccess
-/web/index.php
-/web/index-test.php
-/config/db.php
-/config/params.php
 
 # composer itself is not needed
 composer.phar

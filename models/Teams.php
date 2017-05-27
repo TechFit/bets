@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "Teams".
@@ -18,7 +19,7 @@ class Teams extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'Teams';
+        return 'teams';
     }
 
     /**
@@ -43,5 +44,25 @@ class Teams extends \yii\db\ActiveRecord
             'title' => 'Title',
             'tournament_id' => 'Tournament ID',
         ];
+    }
+
+    /**
+     * @return array
+     * List with teams title and id
+     */
+    public function getListOfTeam()
+    {
+        $data = self::find()->asArray()->all();
+        $teamList = ArrayHelper::map($data, 'id', 'title');
+
+        return $teamList;
+    }
+
+    public static function getTeamTitle($teamId)
+    {
+        $data = self::find()->asArray()->where('id = :teamId', [':teamId' => $teamId])->all();
+        $teamTitle = ArrayHelper::getValue(ArrayHelper::map($data, 'id', 'title'), $teamId);
+
+        return $teamTitle;
     }
 }

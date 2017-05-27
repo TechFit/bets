@@ -6,7 +6,7 @@ class m170526_135614_tournament extends Migration
 {
     public function up()
     {
-        $this->createTable('Tournament', [
+        $this->createTable('tournament', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'tournament_img' => $this->string(),
@@ -15,6 +15,6 @@ class m170526_135614_tournament extends Migration
 
     public function down()
     {
-        $this->dropTable('Tournament');
+        $this->dropTable('tournament');
     }
 }

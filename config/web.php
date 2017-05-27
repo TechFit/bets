@@ -45,22 +45,13 @@ $config = [
                 'login' => 'site/login',
                 'sign' => 'site/sign',
                 'main' => 'site/index',
-                'admin' => 'admin/main/',
+                'admin' => 'admin/main',
+                'bets' => 'bets/index',
             ],
-        ],
-        'redis' => [
-            'class' => 'yii\redis\Connection',
-            'hostname' => 'localhost',
-            'port' => 6379,
-            'database' => 0,
-        ],
-        'session'       => [
-
-            'class' => 'yii\redis\Session',
-
         ],
     ],
     'params' => $params,
+    'timeZone' => 'Europe/Kiev',
 ];
 
 if (YII_ENV_DEV) {

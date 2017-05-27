@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Teams;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\MatchesSearch */
@@ -25,13 +26,22 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
-            'home_team_id',
-            'guest_team_id',
+            [
+                'label' => 'Home team',
+                'value' => function($data){
+                    return Teams::getTeamTitle($data->home_team_id);
+                }
+            ],
+            [
+                'label' => 'Guest team',
+                'value' => function($data){
+                    return Teams::getTeamTitle($data->guest_team_id);
+                }
+            ],
             'start_time',
             'end_time',
-            // 'home_team_result',
-            // 'guest_team_result',
-            // 'won_team_id',
+            'guest_team_result',
+            'won_team_id',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -6,7 +6,7 @@ class m170526_135940_teams extends Migration
 {
     public function up()
     {
-        $this->createTable('Teams', [
+        $this->createTable('teams', [
             'id' => $this->primaryKey(),
             'title' => $this->string()->notNull(),
             'tournament_id' => $this->integer(),
@@ -16,6 +16,6 @@ class m170526_135940_teams extends Migration
 
     public function down()
     {
-        $this->dropTable('Teams');
+        $this->dropTable('teams');
     }
 }

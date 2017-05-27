@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use PHPUnit\Framework\Exception;
 use Yii;
 
 /**
@@ -10,8 +11,8 @@ use Yii;
  * @property integer $id
  * @property integer $home_team_id
  * @property integer $guest_team_id
- * @property string $start_time
- * @property string $end_time
+ * @property string  $start_time
+ * @property string  $end_time
  * @property integer $home_team_result
  * @property integer $guest_team_result
  * @property integer $won_team_id
@@ -23,7 +24,7 @@ class Matches extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'Matches';
+        return 'matches';
     }
 
     /**
@@ -52,5 +53,18 @@ class Matches extends \yii\db\ActiveRecord
             'guest_team_result' => 'Guest Team Result',
             'won_team_id' => 'Won Team ID',
         ];
+    }
+
+    /**
+     * @param $startTime
+     * @return false|string
+     *
+     * Add 90 minutes to match time
+     */
+    public function countEndTimeMatch($startTime)
+    {
+        $time = date("y-m-d H:i:0", strtotime("+90 minutes", strtotime($startTime)));
+
+        return $time;
     }
 }

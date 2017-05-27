@@ -2,6 +2,8 @@
 
 namespace app\controllers\admin;
 
+use app\models\Teams;
+use Faker\Provider\cs_CZ\DateTime;
 use Yii;
 use app\models\Matches,
     app\models\MatchesSearch,
@@ -10,6 +12,9 @@ use yii\web\Controller,
     yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter,
     yii\filters\AccessControl;
+use Exception;
+use yii\web\ForbiddenHttpException;
+use yii\web\NotAcceptableHttpException;
 
 /**
  * MatchesController implements the CRUD actions for Matches model.
@@ -81,24 +86,39 @@ class MatchesController extends Controller
     {
         $model = new Matches();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        $teamModels = new Teams();
+        $teams = $teamModels->getListOfTeam();
+
+        if ($model->load(Yii::$app->request->post())) {
+
+            $model->end_time = $model->countEndTimeMatch($model->start_time);
+
+            if ($model->save()){
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
+
+        return $this->render('create', [
+            'model' => $model,
+            'teams' => $teams
+        ]);
     }
 
     /**
+     *
      * Updates an existing Matches model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
+     * @throws ForbiddenHttpException
      */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        if (date('Y-m-d H:i:s') < $model->start_time or date('Y-m-d H:i:s') > $model->end_time) {
+            throw new ForbiddenHttpException('Запрещено редактирование.');
+        }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
