@@ -47,6 +47,7 @@ $config = [
                 'main' => 'site/index',
                 'admin' => 'admin/main',
                 'bets' => 'bets/index',
+                'game' => 'bets/game',
             ],
         ],
     ],

@@ -4,10 +4,13 @@
 namespace app\controllers;
 
 
-use app\models\MatchesForUser;
-use yii\base\Controller;
+use app\models\BetsForm,
+    app\models\MatchesForUser;
+use Yii;
+use yii\web\Controller;
 use yii\filters\AccessControl,
     yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
 
 class BetsController extends Controller
 {
@@ -53,12 +56,48 @@ class BetsController extends Controller
         ];
     }
 
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
         $model = new MatchesForUser();
 
         return $this->render('index', [
             'model' => $model,
+        ]);
+    }
+
+    /**
+     * @return string|\yii\web\Response
+     * @throws ForbiddenHttpException
+     *
+     * Page for user bets
+     */
+    public function actionGame()
+    {
+        $model = new BetsForm();
+        $checkMatch = new MatchesForUser();
+        $matchId = Yii::$app->getRequest()->get('id');
+        $checkUser = $checkMatch->checkUserBets($matchId, Yii::$app->user->id);
+        $checkTime = $checkMatch->checkIsMatchAvailable($matchId);
+        if ($checkUser == 0 and $checkTime == 1)
+        {
+            if (Yii::$app->request->post('BetsForm')) {
+                $model->attributes = Yii::$app->request->post('BetsForm');
+                $model->matchId = $matchId;
+                if ($model->validate() && $model->save()) {
+                    return Yii::$app->getResponse()->redirect('/');
+                }
+            }
+
+        } else {
+            throw new ForbiddenHttpException('Прогноз уже сделан');
+        }
+
+        return $this->render('game', [
+            'model' => $model,
+            'matchId' => $matchId
         ]);
     }
 }

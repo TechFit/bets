@@ -32,7 +32,7 @@ $this->title = 'Bets';
             <td><?= $match['home_team_result'] . ':' . $match['guest_team_result'] ?></td>
             <td><?= Teams::getTeamTitle($match['won_team_id']) ?></td>
             <td>
-                <?php echo empty(Teams::getTeamTitle($match['won_team_id'])) ? Html::a("Указать счет", "") : 'Завершена' ?>
+                <?php echo empty(Teams::getTeamTitle($match['won_team_id'])) ? Html::a("Указать счет", "game?id=" . $match['id']) : 'Завершена' ?>
             </td>
         </tr>
         <?php } ?>
