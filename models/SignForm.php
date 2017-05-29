@@ -40,7 +40,7 @@ class SignForm extends Model
         $user = new User();
         $user->name = $this->name;
         $user->email = $this->email;
-        $user->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+        $user->password = sha1($this->password);
         $user->save();
     }
 }
