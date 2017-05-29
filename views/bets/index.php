@@ -24,16 +24,14 @@ $this->title = 'Bets';
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($model->getAvailableMatches() as $match) { ?>
+        <?php foreach ($listOfMatches as $match) { ?>
         <tr>
-            <td><?= Teams::getTeamTitle($match['home_team_id']) ?></td>
-            <td><?= Teams::getTeamTitle($match['guest_team_id']) ?></td>
-            <td><?= $match['start_time'] ?></td>
-            <td><?= $match['home_team_result'] . ':' . $match['guest_team_result'] ?></td>
-            <td><?= Teams::getTeamTitle($match['won_team_id']) ?></td>
-            <td>
-                <?php echo empty(Teams::getTeamTitle($match['won_team_id'])) ? Html::a("Указать счет", "game?id=" . $match['id']) : 'Завершена' ?>
-            </td>
+            <td><?= $match['homeTeam'] ?></td>
+            <td><?= $match['guestTeam'] ?></td>
+            <td><?= $match['matchTime'] ?></td>
+            <td><?= $match['matchResult'] ?></td>
+            <td><?= $match['winner'] ?></td>
+            <td><?= $match['tag'] ?>/td>
         </tr>
         <?php } ?>
         </tbody>

@@ -6,6 +6,7 @@ namespace app\models;
 
 use yii\base\Model;
 use Yii;
+use yii\helpers\Html;
 
 /**
  * Class MatchesForUser
@@ -15,13 +16,28 @@ use Yii;
  */
 class MatchesForUser extends Model
 {
+    const GOALLESS_DRAW = 0;
+
+    /**
+     * @return array
+     *
+     * Get list of Matches from db with interval (last 24h)
+     */
     public function getAvailableMatches()
     {
-        $query = Yii::$app->db->createCommand('SELECT * FROM matches ORDER BY start_time')->queryAll();
+        $query = Yii::$app->db->createCommand('SELECT * FROM matches WHERE start_time >= now() - INTERVAL 1 DAY ORDER BY start_time ')->queryAll();
 
         return $query;
     }
 
+    /**
+     * @param $userId
+     * @param $matchId
+     * @param $homeTeamScore
+     * @param $guestTeamScore
+     *
+     * Save user bet in DB
+     */
     public function saveUserBet($userId, $matchId, $homeTeamScore, $guestTeamScore)
     {
         $query = Yii::$app->db->createCommand('
@@ -51,6 +67,13 @@ class MatchesForUser extends Model
             ->execute();
     }
 
+    /**
+     * @param $matchId
+     * @param $userId
+     * @return false|null|string
+     *
+     * Checking, is user already make the bet for current match
+     */
     public function checkUserBets($matchId, $userId)
     {
         $query = Yii::$app->db->createCommand('
@@ -63,6 +86,12 @@ class MatchesForUser extends Model
         return $query;
     }
 
+    /**
+     * @param $matchId
+     * @return false|null|string
+     *
+     * Checking, is current match is available
+     */
     public function checkIsMatchAvailable($matchId)
     {
         $query = Yii::$app->db->createCommand('
@@ -73,4 +102,36 @@ class MatchesForUser extends Model
 
         return $query;
     }
+
+    public function dataForMatchTable()
+    {
+        $data = [];
+
+        $listOfMatch = self::getAvailableMatches();
+        $i = 0;
+        foreach ($listOfMatch AS $match){
+            $i++;
+            $data[$i]['homeTeam'] = Teams::getTeamTitle($match['home_team_id']);
+            $data[$i]['guestTeam'] = Teams::getTeamTitle($match['guest_team_id']);
+            $data[$i]['matchTime'] = $match['start_time'];
+            $data[$i]['matchResult'] = $match['home_team_result'] . ':' . $match['guest_team_result'];
+            if ($match['won_team_id'] == self::GOALLESS_DRAW) {
+                $data[$i]['winner'] = 'Ничья';
+            } elseif ($match['won_team_id'] !== 'null') {
+                $data[$i]['winner'] = Teams::getTeamTitle($match['won_team_id']);
+            } else {
+                $data[$i]['winner'] = "-";
+            }
+
+            if (empty(self::checkUserBets($match['id'], Yii::$app->user->getId()))){
+                $data[$i]['tag'] = Html::a("Указать счет", "game?id=" . $match['id']);
+            } else {
+                $data[$i]['tag'] = '<p>Завершен</p>';
+            }
+
+        }
+
+        return $data;
+    }
+
 }

@@ -63,8 +63,11 @@ class BetsController extends Controller
     {
         $model = new MatchesForUser();
 
+        $listOfMatches = $model->dataForMatchTable();
+
         return $this->render('index', [
             'model' => $model,
+            'listOfMatches' => $listOfMatches,
         ]);
     }
 
