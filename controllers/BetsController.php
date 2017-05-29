@@ -5,11 +5,11 @@ namespace app\controllers;
 
 
 use app\models\BetsForm,
-    app\models\MatchesForUser;
+    app\models\MatchesForUser,
+    app\models\User;
 use Yii;
 use yii\web\Controller;
-use yii\filters\AccessControl,
-    yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
 
 class BetsController extends Controller
@@ -22,23 +22,18 @@ class BetsController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout', 'index', 'game'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'index', 'game'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
             ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
         ];
     }
+
 
     /**
      * @inheritdoc
@@ -90,7 +85,7 @@ class BetsController extends Controller
                 $model->attributes = Yii::$app->request->post('BetsForm');
                 $model->matchId = $matchId;
                 if ($model->validate() && $model->save()) {
-                    return Yii::$app->getResponse()->redirect('/');
+                    return $this->redirect(['index']);
                 }
             }
 

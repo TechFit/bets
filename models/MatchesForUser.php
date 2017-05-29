@@ -115,18 +115,18 @@ class MatchesForUser extends Model
             $data[$i]['guestTeam'] = Teams::getTeamTitle($match['guest_team_id']);
             $data[$i]['matchTime'] = $match['start_time'];
             $data[$i]['matchResult'] = $match['home_team_result'] . ':' . $match['guest_team_result'];
-            if ($match['won_team_id'] == self::GOALLESS_DRAW) {
-                $data[$i]['winner'] = 'Ничья';
-            } elseif ($match['won_team_id'] !== 'null') {
-                $data[$i]['winner'] = Teams::getTeamTitle($match['won_team_id']);
-            } else {
+            if (is_null($match['won_team_id'])){
                 $data[$i]['winner'] = "-";
+            } elseif ($match['won_team_id'] === self::GOALLESS_DRAW) {
+                $data[$i]['winner'] = 'Ничья';
+            } else {
+                $data[$i]['winner'] = Teams::getTeamTitle($match['won_team_id']);
             }
 
             if (empty(self::checkUserBets($match['id'], Yii::$app->user->getId()))){
                 $data[$i]['tag'] = Html::a("Указать счет", "game?id=" . $match['id']);
             } else {
-                $data[$i]['tag'] = '<p>Завершен</p>';
+                $data[$i]['tag'] = '<p>Сделан</p>';
             }
 
         }

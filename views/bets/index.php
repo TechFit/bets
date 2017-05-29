@@ -31,7 +31,7 @@ $this->title = 'Bets';
             <td><?= $match['matchTime'] ?></td>
             <td><?= $match['matchResult'] ?></td>
             <td><?= $match['winner'] ?></td>
-            <td><?= $match['tag'] ?>/td>
+            <td><?= $match['tag'] ?></td>
         </tr>
         <?php } ?>
         </tbody>
