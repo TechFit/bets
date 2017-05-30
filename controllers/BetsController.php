@@ -84,13 +84,14 @@ class BetsController extends Controller
             if (Yii::$app->request->post('BetsForm')) {
                 $model->attributes = Yii::$app->request->post('BetsForm');
                 $model->matchId = $matchId;
-                if ($model->validate() && $model->save()) {
-                    return $this->redirect(['index']);
+                if ($model->validate()) {
+                    $model->save();
+                    return $this->goHome();
                 }
             }
 
         } else {
-            throw new ForbiddenHttpException('Прогноз уже сделан');
+            throw new ForbiddenHttpException('Запрещено');
         }
 
         return $this->render('game', [
