@@ -34,7 +34,7 @@ class BetsForm extends Model
 
         $saveMatch = new MatchesForUser();
 
-        $saveMatch->saveUserBet($userId, $this->matchId, $this->homeTeamResult, $this->homeTeamResult);
+        $saveMatch->saveUserBet($userId, $this->matchId, $this->homeTeamResult, $this->guestTeamResult);
 
     }
 

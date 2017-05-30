@@ -79,7 +79,7 @@ class BetsController extends Controller
         $matchId = Yii::$app->getRequest()->get('id');
         $checkUser = $checkMatch->checkUserBets($matchId, Yii::$app->user->id);
         $checkTime = $checkMatch->checkIsMatchAvailable($matchId);
-        if ($checkUser == 0 and $checkTime == 1)
+        if (empty($checkUser) and $checkTime == 1)
         {
             if (Yii::$app->request->post('BetsForm')) {
                 $model->attributes = Yii::$app->request->post('BetsForm');
@@ -97,5 +97,13 @@ class BetsController extends Controller
             'model' => $model,
             'matchId' => $matchId
         ]);
+    }
+
+    public function actionDelete($betId){
+
+        $model = new MatchesForUser();
+        $model->deleteUserBet($betId);
+
+        return $this->redirect(['game']);
     }
 }

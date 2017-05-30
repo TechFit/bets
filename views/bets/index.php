@@ -21,6 +21,7 @@ $this->title = 'Bets';
             <th>Результат</th>
             <th>Победитель</th>
             <th>Ваш прогноз</th>
+            <th>Количество прогнозов</th>
         </tr>
         </thead>
         <tbody>
@@ -31,7 +32,8 @@ $this->title = 'Bets';
             <td><?= $match['matchTime'] ?></td>
             <td><?= $match['matchResult'] ?></td>
             <td><?= $match['winner'] ?></td>
-            <td><?= $match['tag'] ?></td>
+            <td><?= $match['tag']?></td>
+            <td><?= $match['totalBets'] ?></td>
         </tr>
         <?php } ?>
         </tbody>

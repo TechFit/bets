@@ -63,7 +63,7 @@ class MatchesForUser extends Model
             ->bindParam(':userId', $userId)
             ->bindParam(':matchId', $matchId)
             ->bindParam(':homeTeamScore', $homeTeamScore)
-            ->bindParam(':guestTeamScore', $homeTeamScore)
+            ->bindParam(':guestTeamScore', $guestTeamScore)
             ->execute();
     }
 
@@ -77,11 +77,11 @@ class MatchesForUser extends Model
     public function checkUserBets($matchId, $userId)
     {
         $query = Yii::$app->db->createCommand('
-            SELECT COUNT(match_id) FROM userBets WHERE match_id = :matchId AND user_id = :userId
+            SELECT id, home_team_score, guest_team_score FROM userBets WHERE match_id = :matchId AND user_id = :userId
         ')
             ->bindParam(':matchId', $matchId)
             ->bindParam(':userId', $userId)
-            ->queryScalar();
+            ->queryAll();
 
         return $query;
     }
@@ -103,6 +103,23 @@ class MatchesForUser extends Model
         return $query;
     }
 
+    /**
+     * @param $matchId integer
+     * @return false|null|string
+     *
+     * Get total count bets for match
+     */
+    public function totalBetsForMatch($matchId)
+    {
+        $query = Yii::$app->db->createCommand('
+            SELECT count(id) FROM userBets WHERE match_id = :matchId 
+        ')
+            ->bindParam(':matchId', $matchId)
+            ->queryScalar();
+
+        return $query;
+    }
+
     public function dataForMatchTable()
     {
         $data = [];
@@ -117,21 +134,38 @@ class MatchesForUser extends Model
             $data[$i]['matchResult'] = $match['home_team_result'] . ':' . $match['guest_team_result'];
             if (is_null($match['won_team_id'])){
                 $data[$i]['winner'] = "-";
-            } elseif ($match['won_team_id'] === self::GOALLESS_DRAW) {
+            } elseif ((int)$match['won_team_id'] === self::GOALLESS_DRAW) {
                 $data[$i]['winner'] = 'Ничья';
             } else {
                 $data[$i]['winner'] = Teams::getTeamTitle($match['won_team_id']);
             }
 
-            if (empty(self::checkUserBets($match['id'], Yii::$app->user->getId()))){
+
+            if (self::checkIsMatchAvailable($match['id']) and empty(self::checkUserBets($match['id'], Yii::$app->user->getId()))){
                 $data[$i]['tag'] = Html::a("Указать счет", "game?id=" . $match['id']);
+            } elseif (!self::checkIsMatchAvailable($match['id'])) {
+                $data[$i]['tag'] = '<p>Завершен</p>';
             } else {
-                $data[$i]['tag'] = '<p>Сделан</p>';
+                $userBet = self::checkUserBets($match['id'], Yii::$app->user->getId());
+                $data[$i]['tag'] = '<span>'. $userBet[0]['home_team_score'] . ':' . $userBet[0]['guest_team_score'] . '</span> ' .
+                $data[$i]['tagDel'] = Html::a("Удалить", "bets/delete?betId=" . $userBet[0]['id']);
             }
+
+            $data[$i]['totalBets'] = self::totalBetsForMatch($match['id']);
 
         }
 
         return $data;
+    }
+
+    public function deleteUserBet($betId)
+    {
+        $userId = Yii::$app->user->getId();
+
+        $query = Yii::$app->db->createCommand('DELETE FROM userBets WHERE id = :betId AND user_id = :user_id')
+            ->bindParam(':betId', $betId)
+            ->bindParam(':user_id', $userId)
+            ->execute();
     }
 
 }

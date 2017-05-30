@@ -50,6 +50,17 @@ $config = [
                 'game' => 'bets/game',
             ],
         ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
+        ],
+        'session'       => [
+
+            'class' => 'yii\redis\Session',
+
+        ],
     ],
     'params' => $params,
     'timeZone' => 'Europe/Kiev',
