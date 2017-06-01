@@ -42,6 +42,9 @@ AppAsset::register($this);
             Yii::$app->user->isGuest ? (
             ['label' => 'Регистрация', 'url' => ['/site/sign']]
             ) : (''),
+            !Yii::$app->user->isGuest and Yii::$app->user->identity->role == 'admin' ? (
+            ['label' => 'Редактор', 'url' => ['/admin']]
+            ) : (''),
             Yii::$app->user->isGuest ? (
             ['label' => 'Вход', 'url' => ['/site/login']]
             ) : (
@@ -63,9 +66,13 @@ AppAsset::register($this);
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
-        <?= $content ?>
-        <?= PlayerStats\PlayerStatsWidget::widget();
-        ?>
+        <div class="col-md-10">
+            <?= $content ?>
+        </div>
+
+        <div class="col-md-2">
+            <?= PlayerStats\PlayerStatsWidget::widget(); ?>
+        </div>
     </div>
 </div>
 
