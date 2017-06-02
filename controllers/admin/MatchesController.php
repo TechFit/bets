@@ -117,10 +117,14 @@ class MatchesController extends Controller
         $model = $this->findModel($id);
 
         if (date('Y-m-d H:i:s') < $model->start_time or date('Y-m-d H:i:s') > $model->end_time) {
-            throw new ForbiddenHttpException('Запрещено редактирование.');
+            throw new ForbiddenHttpException('Редактирование запрещено.');
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            // Count total score for user after adding match result by admin
+            if (!isNull($model->won_team_id)) {
+                $model->countTotalUserScore($model->id);
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [

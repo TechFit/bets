@@ -120,6 +120,11 @@ class MatchesForUser extends Model
         return $query;
     }
 
+    /**
+     * @return array
+     *
+     * Return array with data for table on bets page
+     */
     public function dataForMatchTable()
     {
         $data = [];
@@ -140,7 +145,6 @@ class MatchesForUser extends Model
                 $data[$i]['winner'] = Teams::getTeamTitle($match['won_team_id']);
             }
 
-
             if (self::checkIsMatchAvailable($match['id']) and empty(self::checkUserBets($match['id'], Yii::$app->user->getId()))){
                 $data[$i]['tag'] = Html::a("Указать счет", "game?id=" . $match['id']);
             } elseif (!self::checkIsMatchAvailable($match['id'])) {
@@ -158,6 +162,11 @@ class MatchesForUser extends Model
         return $data;
     }
 
+    /**
+     * @param $betId
+     *
+     * Delete user's bet
+     */
     public function deleteUserBet($betId)
     {
         $userId = Yii::$app->user->getId();
@@ -166,6 +175,16 @@ class MatchesForUser extends Model
             ->bindParam(':betId', $betId)
             ->bindParam(':user_id', $userId)
             ->execute();
+    }
+
+    public function getUserBetForMatch($matchId, $userId)
+    {
+        $query = Yii::$app->db->createCommand('SELECT * FROM userBets WHERE id = :matchId AND user_id = :user_id')
+            ->bindParam(':matchId', $matchId)
+            ->bindParam(':user_id', $userId)
+            ->execute();
+
+        return $query;
     }
 
 }

@@ -67,4 +67,15 @@ class Matches extends \yii\db\ActiveRecord
 
         return $time;
     }
+
+    public function countTotalUserScore($matchId)
+    {
+        $matchResult = self::findOne(['id' => $matchId]);
+
+        $userMatchesData = new MatchesForUser();
+
+        $userBetForMatch = $userMatchesData->getUserBetForMatch($matchId, $matchResult->id);
+
+        // todo need to check data from userMatchesData and user betForMatch;
+    }
 }

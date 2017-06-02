@@ -42,7 +42,7 @@ AppAsset::register($this);
             Yii::$app->user->isGuest ? (
             ['label' => 'Регистрация', 'url' => ['/site/sign']]
             ) : (''),
-            !Yii::$app->user->isGuest and Yii::$app->user->identity->role == 'admin' ? (
+            !Yii::$app->user->isGuest && Yii::$app->user->identity->role == 'admin' ? (
             ['label' => 'Редактор', 'url' => ['/admin']]
             ) : (''),
             Yii::$app->user->isGuest ? (
