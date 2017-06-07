@@ -177,6 +177,13 @@ class MatchesForUser extends Model
             ->execute();
     }
 
+    /**
+     * @param $matchId
+     * @param $userId
+     * @return array
+     *
+     * Return info about user bet for match
+     */
     public function getUserBetForMatch($matchId, $userId)
     {
         $query = Yii::$app->db->createCommand('SELECT * FROM userBets WHERE id = :matchId AND user_id = :user_id')
