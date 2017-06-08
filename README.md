@@ -1,3 +1,2 @@
 # bets
-Tournament app
-based on Yii2
+Tournament app based on Yii2
