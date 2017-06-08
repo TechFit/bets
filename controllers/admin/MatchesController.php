@@ -122,7 +122,7 @@ class MatchesController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             // Count total score for user after adding match result by admin
-            if (!isNull($model->won_team_id)) {
+            if (!!is_null($model->won_team_id)) {
                 $model->countTotalUserScore($model->id);
             }
             return $this->redirect(['view', 'id' => $model->id]);

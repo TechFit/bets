@@ -68,6 +68,11 @@ class Matches extends \yii\db\ActiveRecord
         return $time;
     }
 
+    /**
+     * @param $matchId
+     *
+     * After admin add result for match, will check user bets
+     */
     public function countTotalUserScore($matchId)
     {
         $matchResult = self::findOne(['id' => $matchId]);
@@ -76,6 +81,10 @@ class Matches extends \yii\db\ActiveRecord
 
         $userBetForMatch = $userMatchesData->getUserBetForMatch($matchId, $matchResult->id);
 
-        // todo need to check data from userMatchesData and user betForMatch;
+        if  ($userBetForMatch['home_team_score'] == $matchResult['home_team_result']
+             &&
+             $userBetForMatch['guest_team_score'] == $matchResult['guest_team_result']){
+                $userMatchesData->updateUserResult($userBetForMatch['user_id']);
+        }
     }
 }

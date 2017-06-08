@@ -194,4 +194,16 @@ class MatchesForUser extends Model
         return $query;
     }
 
+    /**
+     * @param $userId
+     *
+     * Add one point for user result
+     */
+    public function updateUserResult($userId)
+    {
+        $query = Yii::$app->db->createCommand('UPDATE userBets SET result = result + 1 WHERE user_id = :userId')
+            ->bindParam(':userId', $userId)
+            ->execute();
+    }
+
 }
